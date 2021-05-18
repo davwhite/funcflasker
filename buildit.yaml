@@ -1,0 +1,53 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  become: false
+  vars_files: 
+    - vars.yaml
+  tasks:
+    - debug:
+        msg: "Endpoint Injection..."
+
+    - set_fact: file_list="" 
+    - set_fact: function_list=""
+        
+    - name: Collect any functions
+      find:
+        paths: "{{ playbook_dir }}/{{ flask_dir }}/functions"
+        recurse: yes
+      register: flist
+    # - debug:
+    #     msg: "{{ item.path }}"
+    #   with_items: "{{ flist.files }}"
+
+    - name: add files to the list
+      set_fact:
+        file_list: "{{ file_list }} ({{ item.path }}| basename)"
+      with_items: "{{ flist.files }}"
+    - debug:
+        var: file_list
+
+    - name: Create the main flask file with endpoints
+      template:
+        src: templates/main.py.j2
+        dest: "flaskr/main.py"
+
+    - name: Build site image
+      containers.podman.podman_image:
+        name: dyn
+        path: "{{ playbook_dir }}"
+      register: buildstat
+    - debug:
+        var: buildstat
+
+    - name: Run container
+      containers.podman.podman_container:
+        name: dyn
+        image: dyn
+        ports:
+            - "5000:5000"
+        state: started
+    #   register: podstat
+    # - debug:
+    #     var: podstat

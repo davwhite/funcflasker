@@ -1,0 +1,24 @@
+from flask import Flask
+
+{% for my_idx in range(hostvars['localhost']['flist']['files']|length) %}
+from functions.{{(hostvars['localhost']['flist']['files'][my_idx].path | basename).split('.')[0]}} import *
+{% endfor %}
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
+{% for my_idx in range(hostvars['localhost']['flist']['files']|length) %}
+@app.route('/{{(hostvars['localhost']['flist']['files'][my_idx].path | basename).split('.')[0]}}')
+def function{{my_idx}}():
+    x = {{(hostvars['localhost']['flist']['files'][my_idx].path | basename).split('.')[0]}}()
+    return x
+
+{% endfor %}
+
+# @app.route('/f2')
+# def func2():
+#     x = function2()
+#     return x
