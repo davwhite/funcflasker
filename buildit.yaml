@@ -33,21 +33,31 @@
         src: templates/main.py.j2
         dest: "flaskr/main.py"
 
-    - name: Build site image
-      containers.podman.podman_image:
-        name: dyn
-        path: "{{ playbook_dir }}"
-      register: buildstat
-    - debug:
-        var: buildstat
+    - name: extract password from file
+      slurp:
+        src: flaskr/functions/func1.py
+      register: filefunc
 
-    - name: Run container
-      containers.podman.podman_container:
-        name: dyn
-        image: dyn
-        ports:
-            - "5000:5000"
-        state: started
-    #   register: podstat
+    - set_fact: funcname="{{ filefunc['content'] | b64decode | regex_findall('def %') }}"
+
+    - debug:
+        var: funcname
+
+    # - name: Build site image
+    #   containers.podman.podman_image:
+    #     name: dyn
+    #     path: "{{ playbook_dir }}"
+    #   register: buildstat
     # - debug:
-    #     var: podstat
+    #     var: buildstat
+
+    # - name: Run container
+    #   containers.podman.podman_container:
+    #     name: dyn
+    #     image: dyn
+    #     ports:
+    #         - "5000:5000"
+    #     state: started
+    # #   register: podstat
+    # # - debug:
+    # #     var: podstat
