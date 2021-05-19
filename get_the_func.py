@@ -1,21 +1,28 @@
+import sys
+import json
+numargs = len(sys.argv)
+arglist = str(sys.argv)
+# print(arglist.split())
+filename = sys.argv[1]
+
 class funcs: 
     def __init__(self, name, params): 
         self.name = name 
         self.params = params
 
-flist = []
+# flist = []
+jlist = []
 
 punctuations = '''!()-[]{};:'"\,<>./?@#$%^&*~'''
 no_punct = ""
 
-qbfile = open("flaskr/functions/funcalc.py", "r")
+qbfile = open(filename, "r")
 Lines = qbfile.readlines()
 count = 0
 for line in Lines:
     l = Lines[count].strip()
     pos = l.find("def ")
     if pos >= 0:
-        print(l)        
         no_punct = ""
         for char in l:
             if char not in punctuations:
@@ -30,16 +37,8 @@ for line in Lines:
             if (len(p) > 0):
                 fparam.append(p)
             i += 1
-        flist.append( funcs(fname,fparam))
-        # print(no_punct.split())
-        # print (flist[0].name)
-        # print (flist[0].params)
+        j = { "FunctionName": fname, "Parameters": fparam}
+        jlist.append(j)
     count += 1
-
-f = 0
-while f < len(flist):
-    print (flist[f].name)
-    print (flist[f].params)
-    f += 1
-
+print(json.dumps(jlist))
 qbfile.close()

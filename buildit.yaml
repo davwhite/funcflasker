@@ -23,26 +23,27 @@
 
     - name: add files to the list
       set_fact:
-        file_list: "{{ file_list }} ({{ item.path }}| basename)"
+        file_list: "{{ file_list }} {{ item.path }}"
       with_items: "{{ flist.files }}"
     - debug:
-        var: file_list
+        var: file_list.split()[2]
+
+    - name: Run a script with arguments (free form)
+      ansible.builtin.script: "{{item}}"
+      args:
+        executable: python3
+      with_items: "{{file_list.split()}}"
+      register: getfuncs
+    
+    - debug:
+        var: getfuncs
 
     - name: Create the main flask file with endpoints
       template:
         src: templates/main.py.j2
         dest: "flaskr/main.py"
 
-    - name: extract password from file
-      slurp:
-        src: flaskr/functions/func1.py
-      register: filefunc
-
-    - set_fact: funcname="{{ filefunc['content'] | b64decode | regex_findall('def %') }}"
-
-    - debug:
-        var: funcname
-
+        
     # - name: Build site image
     #   containers.podman.podman_image:
     #     name: dyn
