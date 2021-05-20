@@ -54,21 +54,21 @@
         dest: "flaskr/main.py"
 
         
-    # - name: Build site image
-    #   containers.podman.podman_image:
-    #     name: dyn
-    #     path: "{{ playbook_dir }}"
-    #   register: buildstat
-    # - debug:
-    #     var: buildstat
+    - name: Build site image
+      containers.podman.podman_image:
+        name: dyn
+        path: "{{ playbook_dir }}"
+      register: buildstat
+    - debug:
+        var: buildstat
 
-    # - name: Run container
-    #   containers.podman.podman_container:
-    #     name: dyn
-    #     image: dyn
-    #     ports:
-    #         - "5000:5000"
-    #     state: started
-    # #   register: podstat
-    # # - debug:
-    # #     var: podstat
+    - name: Run container
+      containers.podman.podman_container:
+        name: dyn
+        image: dyn
+        ports:
+            - "5000:5000"
+        state: started
+    #   register: podstat
+    # - debug:
+    #     var: podstat

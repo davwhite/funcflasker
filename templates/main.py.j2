@@ -13,8 +13,8 @@ def hello_world():
 
 {% set json = hostvars['localhost']['functionsJson'] %}
 {% for my_idx in range(json|length) %}
-@app.route('/{{(json[my_idx].FunctionFile)}}-{{(json[my_idx].FunctionName)}}')
-def {{(json[my_idx].FunctionName)}}({% for f_idx in range(json[my_idx].Parameters|length) %}{{json[my_idx].Parameters[f_idx]}}{% if (f_idx < json[my_idx].Parameters|length -1) %}, {% endif %}{% endfor %}):
+@app.route('/{{(json[my_idx].FunctionName)}}')
+def {{(json[my_idx].FunctionFile)}}_{{(json[my_idx].FunctionName)}}({% for f_idx in range(json[my_idx].Parameters|length) %}{{json[my_idx].Parameters[f_idx]}}{% if (f_idx < json[my_idx].Parameters|length -1) %}, {% endif %}{% endfor %}):
     x = {{(json[my_idx].FunctionName)}}()
     return x
 
