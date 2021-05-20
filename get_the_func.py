@@ -1,5 +1,7 @@
 import sys
 import json
+import ntpath
+import os
 
 def get_file_funcs(filename):
     class funcs: 
@@ -34,7 +36,7 @@ def get_file_funcs(filename):
                 if (len(p) > 0):
                     fparam.append(p)
                 i += 1
-            j = { "FunctionName": fname, "Parameters": fparam}
+            j = { "FunctionFile": ntpath.basename(os.path.splitext(filename)[0]), "FunctionName": fname, "Parameters": fparam}
             jlist.append(j)
         count += 1
     # print(json.dumps(jlist))

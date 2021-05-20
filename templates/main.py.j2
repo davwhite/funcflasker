@@ -1,7 +1,8 @@
 from flask import Flask
 
-{% for my_idx in range(hostvars['localhost']['flist']['files']|length) %}
-from functions.{{(hostvars['localhost']['flist']['files'][my_idx].path | basename).split('.')[0]}} import *
+{% set files = hostvars['localhost']['flist']['files'] %}
+{% for my_idx in range(files|length) %}
+from functions.{{(files[my_idx].path | basename).split('.')[0]}} import *
 {% endfor %}
 
 app = Flask(__name__)
@@ -10,10 +11,11 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
-{% for my_idx in range(hostvars['localhost']['flist']['files']|length) %}
-@app.route('/{{(hostvars['localhost']['flist']['files'][my_idx].path | basename).split('.')[0]}}')
-def function{{my_idx}}():
-    x = {{(hostvars['localhost']['flist']['files'][my_idx].path | basename).split('.')[0]}}()
+{% set json = hostvars['localhost']['functionsJson'] %}
+{% for my_idx in range(json|length) %}
+@app.route('/{{(json[my_idx].FunctionFile)}}-{{(json[my_idx].FunctionName)}}')
+def {{(json[my_idx].FunctionName)}}({% for f_idx in range(json[my_idx].Parameters|length) %}{{json[my_idx].Parameters[f_idx]}}{% if (f_idx < json[my_idx].Parameters|length -1) %}, {% endif %}{% endfor %}):
+    x = {{(json[my_idx].FunctionName)}}()
     return x
 
 {% endfor %}

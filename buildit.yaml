@@ -35,9 +35,15 @@
       # with_items: "{{file_list.split()}}"
       register: getfuncs
     
+    - set_fact:
+        functionsJson: "{{(getfuncs.stdout | from_json)}}"
+
     - debug:
-        msg: "{{ item.FunctionName }}"
-      with_items: "{{ getfuncs.stdout }}"
+        var: functionsJson
+
+    # - debug:
+    #     msg: "{{ item.FunctionName }}"
+    #   with_items: "{{ getfuncs.stdout }}"
 
     # - debug:
     #     msg: "{{ (getfuncs.stdout | from_json) }}"
