@@ -2,7 +2,7 @@ FROM ubi8
 ARG UID=1000
 
 # RUN yum -y update
-RUN yum -y install python3 python3-pip
+RUN yum -y install python38 python38-pip
 RUN pip3 install flask
 COPY flaskr flaskr
 ENV FLASK_APP=flaskr/main.py
