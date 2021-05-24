@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 
 {% set files = hostvars['localhost']['flist']['files'] %}
 {% for my_idx in range(files|length) %}
@@ -14,14 +15,16 @@ def hello_world():
 {% set json = hostvars['localhost']['functionsJson'] %}
 {% for my_idx in range(json|length) %}
 {% set numparams = json[my_idx].Parameters|length %}
-@app.route('/{{(json[my_idx].FunctionName)}}{% if numparams > 0 %}/{% for f_idx in range(numparams) %}<{{json[my_idx].Parameters[f_idx]}}>{% if (f_idx < numparams -1) %}/{% endif %}{% endfor %}{% endif %}')
-def {{(json[my_idx].FunctionFile)}}_{{(json[my_idx].FunctionName)}}({% for f_idx in range(numparams) %}{{json[my_idx].Parameters[f_idx]}}{% if (f_idx < numparams -1) %}, {% endif %}{% endfor %}):
-    x = {{(json[my_idx].FunctionName)}}({% for f_idx in range(numparams) %}{{json[my_idx].Parameters[f_idx]}}{% if (f_idx < numparams -1) %}, {% endif %}{% endfor %})
+@app.route('/{{(json[my_idx].FunctionName)}}{% if numparams > 0 %}{% endif %}', methods=['POST'])
+def {{(json[my_idx].FunctionFile)}}_{{(json[my_idx].FunctionName)}}():
+    {% for f_idx in range(numparams) %}{{json[my_idx].Parameters[f_idx]}} = request.args.get('{{json[my_idx].Parameters[f_idx]}}','N/A')
+    {% endfor %}x = {{(json[my_idx].FunctionName)}}({% for f_idx in range(numparams) %}{{json[my_idx].Parameters[f_idx]}}{% if (f_idx < numparams -1) %}, {% endif %}{% endfor %})
     return x
 
 {% endfor %}
 
-# @app.route('/f2')
-# def func2():
-#     x = function2()
+# @app.route('/postme', methods=['POST'])
+# def postme():
+#     myarg = request.args.get('person','N/A')
+#     x = somejoke(myarg)
 #     return x
