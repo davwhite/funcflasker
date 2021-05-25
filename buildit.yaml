@@ -40,6 +40,16 @@
         src: templates/main.py.j2
         dest: "flaskr/main.py"
 
+    - name: Stop and remove the container if it's already running
+      containers.podman.podman_container:
+        name: dyn
+        state: absent
+
+    - name: Remove the previous image if it exists
+      containers.podman.podman_image:
+        name: dyn
+        state: absent
+
     - name: Build site image
       containers.podman.podman_image:
         name: dyn
