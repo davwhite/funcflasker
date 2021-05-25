@@ -49,3 +49,8 @@ Once complete, the container should be accessible by accessing port ```5000``` o
 # Changelog
 ## v0.0
 - Initial release
+
+## v0.1
+- Minor cleanup
+- Removed unused files
+- Removed unused variables
