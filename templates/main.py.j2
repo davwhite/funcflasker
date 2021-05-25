@@ -10,7 +10,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    msg = "Welcome to FuncFlasker"
+    if request.method == 'POST':
+        return msg
+    else:
+        return msg
 
 {% set json = hostvars['localhost']['functionsJson'] %}
 {% for my_idx in range(json|length) %}
@@ -22,9 +26,3 @@ def {{(json[my_idx].FunctionFile)}}_{{(json[my_idx].FunctionName)}}():
     return x
 
 {% endfor %}
-
-# @app.route('/postme', methods=['POST'])
-# def postme():
-#     myarg = request.args.get('person','N/A')
-#     x = somejoke(myarg)
-#     return x

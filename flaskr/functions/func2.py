@@ -1,2 +1,5 @@
+import time;
+
 def func2():
-    return "I am function2" + "\n"
+    ts = time.time()
+    return "Current timestamp: " + str(ts)
