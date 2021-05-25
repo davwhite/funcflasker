@@ -17,50 +17,36 @@
         paths: "{{ playbook_dir }}/{{ flask_dir }}/functions"
         recurse: yes
       register: flist
-    # - debug:
-    #     msg: "{{ item.path }}"
-    #   with_items: "{{ flist.files }}"
 
     - name: add files to the list
       set_fact:
         file_list: "{{ file_list }} {{ item.path }}"
       with_items: "{{ flist.files }}"
-    # - debug:
-    #     var: file_list.split()
 
     - name: Run a script with arguments (free form)
       ansible.builtin.script: "get_the_func.py {{ file_list }}"
       args:
         executable: python3
-      # with_items: "{{file_list.split()}}"
       register: getfuncs
     
     - set_fact:
         functionsJson: "{{(getfuncs.stdout | from_json)}}"
 
-    - debug:
-        var: functionsJson
-
     # - debug:
-    #     msg: "{{ item.FunctionName }}"
-    #   with_items: "{{ getfuncs.stdout }}"
-
-    # - debug:
-    #     msg: "{{ (getfuncs.stdout | from_json) }}"
+    #     var: functionsJson
 
     - name: Create the main flask file with endpoints
       template:
         src: templates/main.py.j2
         dest: "flaskr/main.py"
 
-        
     - name: Build site image
       containers.podman.podman_image:
         name: dyn
         path: "{{ playbook_dir }}"
       register: buildstat
-    - debug:
-        var: buildstat
+    # - debug:
+    #     var: buildstat
 
     - name: Run container
       containers.podman.podman_container:
@@ -69,6 +55,3 @@
         ports:
             - "5000:5000"
         state: started
-    #   register: podstat
-    # - debug:
-    #     var: podstat
