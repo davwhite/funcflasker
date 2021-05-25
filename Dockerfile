@@ -8,6 +8,7 @@ COPY flaskr flaskr
 ENV FLASK_APP=flaskr/main.py
 ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
+EXPOSE 5000
 # ENV LC_ALL=en_US.utf-8
 # ENV LANG=en_US.utf-8
-ENTRYPOINT ["flask","run"]
+ENTRYPOINT ["flask","run","--host","0.0.0.0"]
