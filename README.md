@@ -55,5 +55,9 @@ Once complete, the container should be accessible by accessing port ```5000``` o
 - Removed unused files
 - Removed unused variables
 
+## v0.1.1
+- Added TODOs to README file
+- Added crates to sample functions
+
 # TODO's
 - Parse scripts for library imports
