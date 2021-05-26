@@ -54,3 +54,6 @@ Once complete, the container should be accessible by accessing port ```5000``` o
 - Minor cleanup
 - Removed unused files
 - Removed unused variables
+
+# TODO's
+- Parse scripts for library imports
