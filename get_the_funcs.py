@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import glob
 import sys
 import json
@@ -9,6 +10,7 @@ flaskdir = "flaskr"
 funcdir = flaskdir + "/functions"
 
 def get_file_funcs(filename):
+    print("    - adding functions from " + filename + "...")
     class funcs: 
         def __init__(self, name, params): 
             self.name = name 
@@ -49,20 +51,12 @@ def get_file_funcs(filename):
     return jlist
 
 def process_files(fileList):
+    print("- Gathering function files...")
     functionList = []
-    # fileList = []
-    numargs = len(sys.argv)
-    a = 1
-    while a < numargs:
-        arg = sys.argv[a]
-        if len(arg) > 0:
-            fileList.append(arg)
-        a += 1
-    # print(fileList)
-
     numFiles = len(fileList)
     f = 0
     while f < numFiles:
+        print("  - added " + fileList[f])
         listOfFunctions = get_file_funcs(fileList[f])
         b = 0
         while b < len(listOfFunctions):
@@ -73,20 +67,23 @@ def process_files(fileList):
     return functionList
 
 def write_flask(file_contents):
+    print("- Writing flask file...")
     app_file = flaskdir + "/main.py"
     f = open(app_file, "w")
     f.write(file_contents)
     f.close()
+    print("- Flask file written")
 
     #open and read the file after the appending:
-    f = open(app_file, "r")
-    print(f.read())
+    # f = open(app_file, "r")
+    # print(f.read())
 
+print("\n* Flask file generator *")
 funcfiles = glob.glob(funcdir + "/*.py")
-i = 0
-while i < len(funcfiles):
+# i = 0
+# while i < len(funcfiles):
     # print(str(funcfiles[i]).strip())
-    i += 1
+    # i += 1
 x = process_files(funcfiles)
 # print(json.dumps(x, indent=2))
 # print(x[0]['FunctionName'])
@@ -96,3 +93,4 @@ t = env.get_template("main.py.j2")
 file_contents = t.render(funcfiles=x)
 # print(t.render(funcfiles=x))
 write_flask(file_contents)
+print("* Generation complete *\n")
