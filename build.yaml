@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  gather_facts: no
+  connection: local
+  become: false
+  vars_files: 
+    - vars.yaml
+  tasks:
+    - name: Run python script to generate and run the flask app
+      ansible.builtin.script: "get_the_funcs.py"
+        # args:
+        #   executable: python3
+        # register: getfuncs    
+    - name: Stop and remove the container if it's already running
+      containers.podman.podman_container:
+        name: dyn
+        state: absent
+
+    - name: Remove the previous image if it exists
+      containers.podman.podman_image:
+        name: dyn
+        state: absent
+
+    - name: Build site image
+      containers.podman.podman_image:
+        name: dyn
+        path: "{{ playbook_dir }}"
+      register: buildstat
+    # - debug:
+    #     var: buildstat
+
+    - name: Run container
+      containers.podman.podman_container:
+        name: dyn
+        image: dyn
+        ports:
+            - "5000:5000"
+        state: started
