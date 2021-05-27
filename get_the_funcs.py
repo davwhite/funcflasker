@@ -72,16 +72,27 @@ def process_files(fileList):
     # print(json.dumps(functionList))
     return functionList
 
+def write_flask(file_contents):
+    app_file = flaskdir + "/main.py"
+    f = open(app_file, "w")
+    f.write(file_contents)
+    f.close()
+
+    #open and read the file after the appending:
+    f = open(app_file, "r")
+    print(f.read())
+
 funcfiles = glob.glob(funcdir + "/*.py")
 i = 0
 while i < len(funcfiles):
     # print(str(funcfiles[i]).strip())
     i += 1
 x = process_files(funcfiles)
-print(json.dumps(x, indent=2))
-
+# print(json.dumps(x, indent=2))
 # print(x[0]['FunctionName'])
 
 env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
 t = env.get_template("main.py.j2")
-print(t.render(funcfiles=x))
+file_contents = t.render(funcfiles=x)
+# print(t.render(funcfiles=x))
+write_flask(file_contents)
