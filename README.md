@@ -57,8 +57,11 @@ Once complete, the container should be accessible by accessing port ```5000``` o
 - Added TODOs to README file
 - Added crates to sample functions
 
+## v0.2
+- Separated ansible scripts from python scripts
+- Flask app generated through jinja template from python script
+
 # TODO's
 - Parse scripts for library imports
-- Replace Ansible with Python
 - Replace POST form requests with json
 - Storing static variable for service
