@@ -1,7 +1,12 @@
+import glob
 import sys
 import json
 import ntpath
 import os
+import jinja2
+
+flaskdir = "flaskr"
+funcdir = flaskdir + "/functions"
 
 def get_file_funcs(filename):
     class funcs: 
@@ -43,24 +48,40 @@ def get_file_funcs(filename):
     qbfile.close()
     return jlist
 
-functionList = []
-fileList = []
-numargs = len(sys.argv)
-a = 1
-while a < numargs:
-    arg = sys.argv[a]
-    if len(arg) > 0:
-        fileList.append(arg)
-    a += 1
-# print(fileList)
+def process_files(fileList):
+    functionList = []
+    # fileList = []
+    numargs = len(sys.argv)
+    a = 1
+    while a < numargs:
+        arg = sys.argv[a]
+        if len(arg) > 0:
+            fileList.append(arg)
+        a += 1
+    # print(fileList)
 
-numFiles = len(fileList)
-f = 0
-while f < numFiles:
-    listOfFunctions = get_file_funcs(fileList[f])
-    b = 0
-    while b < len(listOfFunctions):
-        functionList.append(listOfFunctions[b])
-        b += 1
-    f += 1
-print(json.dumps(functionList))
+    numFiles = len(fileList)
+    f = 0
+    while f < numFiles:
+        listOfFunctions = get_file_funcs(fileList[f])
+        b = 0
+        while b < len(listOfFunctions):
+            functionList.append(listOfFunctions[b])
+            b += 1
+        f += 1
+    # print(json.dumps(functionList))
+    return functionList
+
+funcfiles = glob.glob(funcdir + "/*.py")
+i = 0
+while i < len(funcfiles):
+    # print(str(funcfiles[i]).strip())
+    i += 1
+x = process_files(funcfiles)
+print(json.dumps(x, indent=2))
+
+# print(x[0]['FunctionName'])
+
+env = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"))
+t = env.get_template("main.py.j2")
+print(t.render(funcfiles=x))
