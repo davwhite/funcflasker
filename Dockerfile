@@ -1,4 +1,4 @@
-FROM ubi8
+FROM ubi8/s2i-base:rhel8.4
 ARG UID=1000
 
 # RUN yum -y update
