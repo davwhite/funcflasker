@@ -1,8 +1,9 @@
-FROM ubi8/s2i-base:rhel8.4
+FROM registry.access.redhat.com/ubi8.python-38
 ARG UID=1000
 
 # RUN yum -y update
-RUN yum -y install python38 python38-pip
+#RUN yum -y install python38 python38-pip
+RUN yum -y install python38-pip
 RUN pip3 install flask
 RUN pip3 install requests bs4
 COPY flaskr flaskr
