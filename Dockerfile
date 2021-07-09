@@ -7,6 +7,7 @@ ARG UID=1000
 RUN pip3 install flask
 RUN pip3 install requests bs4
 COPY flaskr flaskr
+RUN get_the_funcs.py
 ENV FLASK_APP=flaskr/main.py
 ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
